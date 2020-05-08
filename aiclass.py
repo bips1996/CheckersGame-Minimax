@@ -14,19 +14,19 @@ class AI():
 
     def find_moves(self, board):
         moves = list()
-        for i in range(10):
-            for j in range(10):
+        for i in range(8):
+            for j in range(8):
                 if not board[i][j] == 0:
                     if str(list(board[i][j].keys())[0]) == "ply" + str(self.ply):
                         for k in range(-1, 2, 2):
                             for h in range(-1, 2, 2):
-                                if i+k >= 0 and i+k < 10 and j+h >= 0 and j+h < 10:
+                                if i+k >= 0 and i+k < 8 and j+h >= 0 and j+h < 8:
                                     if self.ply == 1:
                                         if int(list(board[i][j].values())[0]) == 2 or h > 0:
                                             if board[i+k][j+h] == 0:
                                                 moves.append(((i, j), (i+k, j+h)))
                                             elif str(list(board[i+k][j+h].keys())[0]) != "ply" + str(self.ply):
-                                                if i+2*k >= 0 and i+2*k < 10 and j+2*h >= 0 and j+2*h < 10:
+                                                if i+2*k >= 0 and i+2*k < 8 and j+2*h >= 0 and j+2*h < 8:
                                                     if board[i+2*k][j+2*h] == 0:
                                                         moves.append(((i, j), (i+2*k, j+2*h)))
                                     elif self.ply == 2:
@@ -34,7 +34,7 @@ class AI():
                                             if board[i+k][j+h] == 0:
                                                 moves.append(((i, j), (i+k, j+h)))
                                             elif str(list(board[i+k][j+h].keys())[0]) != "ply" + str(self.ply):
-                                                if i+2*k >= 0 and i+2*k < 10 and j+2*h >= 0 and j+2*h < 10:
+                                                if i+2*k >= 0 and i+2*k < 8 and j+2*h >= 0 and j+2*h < 8:
                                                     if board[i+2*k][j+2*h] == 0:
                                                         moves.append(((i, j), (i+2*k, j+2*h)))
         shuffle(moves)
@@ -44,16 +44,16 @@ class AI():
         value = 0
         n1 = 0
         n2 = 0
-        for i in range(10):
-            for j in range(10):
+        for i in range(8):
+            for j in range(8):
                 if not board[i][j] == 0:
                     if str(list(board[i][j].keys())[0]) == "ply" + str(self.ply):
                         n1 += 1
                         if i < 5:
                             value += int(1/(i+1))*self.sideVal
                         else:
-                            value += int(1/(abs(i-10)))*self.sideVal
-                        value += int((j+1)/10)*self.wallVal
+                            value += int(1/(abs(i-8)))*self.sideVal
+                        value += int((j+1)/8)*self.wallVal
                         if int(list(board[i][j].values())[0]) == 1:
                             value += self.pieceVal
                         elif int(list(board[i][j].values())[0]) == 2:
@@ -63,8 +63,8 @@ class AI():
                         if i < 5:
                             value -= int(1/(i+1))*self.sideVal
                         else:
-                            value -= int(1/(abs(i-10)))*self.sideVal
-                        value -= int(abs(j-10)/10)*self.wallVal
+                            value -= int(1/(abs(i-8)))*self.sideVal
+                        value -= int(abs(j-8)/8)*self.wallVal
                         if int(list(board[i][j].values())[0]) == 1:
                             value -= self.pieceVal
                         elif int(list(board[i][j].values())[0]) == 2:

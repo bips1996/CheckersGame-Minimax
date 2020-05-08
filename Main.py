@@ -20,10 +20,10 @@ class CheckerBoard():
     def __init__(self, surface, size, col1, col2):
         self.surface = surface
         self.win_size = size
-        self.tile_size = (int(size[0]/10), int(size[1]/10))
+        self.tile_size = (int(size[0]/8), int(size[1]/8))
         self.col1 = col1
         self.col2 = col2
-        self.board = [[0 for x in range(10)] for y in range(10)]
+        self.board = [[0 for x in range(10)] for y in range(8)]
 
     def draw(self, turn):
         self.surface.fill(self.col2)
@@ -38,8 +38,8 @@ class CheckerBoard():
         pygame.draw.rect(self.surface, turn.col, ((0, 0), self.win_size), 3)
 
     def update_board(self, ply1, ply2):
-        for i in range(10):
-            for j in range(10):
+        for i in range(8):
+            for j in range(8):
                 if ply1[i][j] > 0:
                     self.board[i][j] = {"ply1": ply1[i][j]}
                 elif ply2[i][j] > 0:
@@ -49,8 +49,8 @@ class CheckerBoard():
 
     def print_board(self):
         print("\nGameboard:")
-        for i in range(10):
-            for j in range(10):
+        for i in range(8):
+            for j in range(8):
                 if not self.board[i][j] == 0:
                     if list(self.board[i][j].keys())[0] == "ply1":
                         print(int(list(self.board[i][j].values())[0]), end=' ')
@@ -66,7 +66,7 @@ class Player():
     def __init__(self, surface, size, num, col):
         self.surface = surface
         self.win_size = size
-        self.tile_size = (int(size[0]/10), int(size[1]/10))
+        self.tile_size = (int(size[0]/8), int(size[1]/8))
         self.n_men = 15
         self.n_kings = 0
         self.n_eaten = 0
@@ -78,18 +78,18 @@ class Player():
         self.pos_pieces = np.zeros(shape=(10, 10))
         if n == 1:
             for i in range(3):
-                for j in range(0, 10, 2):
+                for j in range(0, 8, 2):
                     if (i == 0 or i == 2):
                         self.pos_pieces[i][j] = 1
                     elif i == 1:
                         self.pos_pieces[i][j+1] = 1
         if n == 2:
             for i in range(3):
-                for j in range(0, 10, 2):
+                for j in range(0, 8, 2):
                     if (i == 0 or i == 2):
-                        self.pos_pieces[9-i][j+1] = 1
+                        self.pos_pieces[7-i][j+1] = 1
                     elif i == 1:
-                        self.pos_pieces[9-i][j] = 1
+                        self.pos_pieces[7-i][j] = 1
         self.pos_pieces = self.pos_pieces.transpose()
 
     def move(self, selected, moveto, board):
@@ -105,7 +105,7 @@ class Player():
                                                ] = self.pos_pieces[selected[0]][selected[1]]
                     self.pos_pieces[selected[0]][selected[1]] = 0
                     # kings promotion
-                    if self.ply == 1 and moveto[1] == 9:
+                    if self.ply == 1 and moveto[1] == 7:
                         self.promote_king(moveto)
                     elif self.ply == 2 and moveto[1] == 0:
                         self.promote_king(moveto)
@@ -119,7 +119,7 @@ class Player():
                 self.pos_pieces[moveto[0]][moveto[1]] = self.pos_pieces[selected[0]][selected[1]]
                 self.pos_pieces[selected[0]][selected[1]] = 0
                 # kings promotion
-                if self.ply == 1 and moveto[1] == 9:
+                if self.ply == 1 and moveto[1] == 7:
                     self.promote_king(moveto)
                 elif self.ply == 2 and moveto[1] == 0:
                     self.promote_king(moveto)
@@ -137,7 +137,7 @@ class Player():
                         for h in range(-2, 3, 4):
                             moveto = (k+i, h+j)
                             dead = None
-                            if moveto[0] >= 0 and moveto[0] < 10 and moveto[1] >= 0 and moveto[1] < 10:
+                            if moveto[0] >= 0 and moveto[0] < 8 and moveto[1] >= 0 and moveto[1] < 8:
                                 dead = self.check_eating_move(selected, moveto, board)
                             if dead:
                                 moves.append((selected, moveto))
@@ -196,12 +196,12 @@ class Player():
                     radius = int(self.tile_size[0]/2*(9/10))
                     pygame.draw.circle(self.surface, self.col, centre, radius)
                     invcol = (255-self.col[0], 255-self.col[1], 255-self.col[2])
-                    radius = int(self.tile_size[0]/2*(2/10))
+                    radius = int(self.tile_size[0]/2*(2/8))
                     pygame.draw.circle(self.surface, invcol, centre, radius)
-                    pygame.draw.circle(self.surface, invcol, (centre[0]+10, centre[1]), radius)
-                    pygame.draw.circle(self.surface, invcol, (centre[0], centre[1]+10), radius)
-                    pygame.draw.circle(self.surface, invcol, (centre[0]-10, centre[1]), radius)
-                    pygame.draw.circle(self.surface, invcol, (centre[0], centre[1]-10), radius)
+                    pygame.draw.circle(self.surface, invcol, (centre[0]+8, centre[1]), radius)
+                    pygame.draw.circle(self.surface, invcol, (centre[0], centre[1]+8), radius)
+                    pygame.draw.circle(self.surface, invcol, (centre[0]-8, centre[1]), radius)
+                    pygame.draw.circle(self.surface, invcol, (centre[0], centre[1]-8), radius)
 
 # FUNCTIONS
 
@@ -236,13 +236,13 @@ def switch_turn(board, turn, sel):
         dir_enemy = list()
         for i in range(-1, 2, 2):
             for j in range(-1, 2, 2):
-                if (sel[0]+i >= 0 and sel[0]+i < 10) and (sel[1]+j >= 0 and sel[1]+j < 10):
+                if (sel[0]+i >= 0 and sel[0]+i < 8) and (sel[1]+j >= 0 and sel[1]+j < 8):
                     if board.board[sel[0]+i][sel[1]+j] == {"ply2": 1} or board.board[sel[0]+i][sel[1]+j] == {"ply2": 2}:
                         near_enemy.append((sel[0]+i, sel[1]+j))
                         dir_enemy.append((i, j))
                         newpos = (near_enemy[-1][0]+dir_enemy[-1][0],
                                   near_enemy[-1][1]+dir_enemy[-1][1])
-                        if newpos[0] >= 0 and newpos[0] < 10 and newpos[1] >= 0 and newpos[1] < 10:
+                        if newpos[0] >= 0 and newpos[0] < 8 and newpos[1] >= 0 and newpos[1] < 8:
                             if board.board[newpos[0]][newpos[1]] == 0:
                                 if type == 1 and dir_enemy[-1][1] == -1:
                                     pass
@@ -255,7 +255,7 @@ def switch_turn(board, turn, sel):
         dir_enemy = list()
         for i in range(-1, 2, 2):
             for j in range(-1, 2, 2):
-                if (sel[0]+i >= 0 and sel[0]+i < 10) and (sel[1]+j >= 0 and sel[1]+j < 10):
+                if (sel[0]+i >= 0 and sel[0]+i < 8) and (sel[1]+j >= 0 and sel[1]+j < 8):
                     if board.board[sel[0]+i][sel[1]+j] == {"ply1": 1} or board.board[sel[0]+i][sel[1]+j] == {"ply1": 2}:
                         near_enemy.append((sel[0]+i, sel[1]+j))
                         dir_enemy.append((i, j))
@@ -271,9 +271,9 @@ def switch_turn(board, turn, sel):
 
 
 def copy_board(board):
-    copy = [[0 for x in range(10)] for y in range(10)]
-    for i in range(10):
-        for j in range(10):
+    copy = [[0 for x in range(8)] for y in range(8)]
+    for i in range(8):
+        for j in range(8):
             copy[i][j] = board[i][j]
     return copy
 
@@ -290,16 +290,16 @@ def print_score(ply1, ply2):
     print("      |                              |")
     str1 = str(ply1.n_eaten)
     str2 = str(ply2.n_eaten)+" "
-    if ply1.n_eaten >= 10:
+    if ply1.n_eaten >= 8:
         str1 = str1 + " "
-    if ply2.n_eaten >= 10:
+    if ply2.n_eaten >= 8:
         str2 = str(ply2.n_eaten)
     print("      |  Player1: " + str1 + "\tPlayer2: " + str2 + "  |")
     print("      |                              |")
     print("      +------------------------------+")
-    if ply1.n_eaten == 15:
+    if ply1.n_eaten == 12:
         print("\n\n\tPLAYER1 WIN!")
-    elif ply2.n_eaten == 15:
+    elif ply2.n_eaten == 12:
         print("\n\n\tPLAYER2 WIN!")
 
 
@@ -307,7 +307,7 @@ if __name__ == "__main__":
 
     pygame.display.init()
     clear_window()
-    pygame.display.set_caption('Checker Minimax')
+    pygame.display.set_caption('Checkers Using Minimax Algorithm')
     window = pygame.display.set_mode(WIN_SIZE)
     clock = pygame.time.Clock()
 
@@ -354,7 +354,7 @@ if __name__ == "__main__":
         if Player_turn == player1:
             board = copy_board(gameboard.board)
             try:
-                valMove, aiMove = ProGamer.minimax(board, 100, True)
+                valMove, aiMove = ProGamer.minimax(board, 64, True)
                 selected = aiMove[0]
                 moveto = aiMove[1]
             except TypeError:
