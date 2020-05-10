@@ -11,7 +11,7 @@ class AI():
         self.kingVal = 50
         self.sideVal = 20
         self.wallVal = 10
-
+        self.totalnodes=0
     def find_moves(self, board):
         moves = list()
         for i in range(8):
@@ -37,6 +37,7 @@ class AI():
                                                 if i+2*k >= 0 and i+2*k < 8 and j+2*h >= 0 and j+2*h < 8:
                                                     if board[i+2*k][j+2*h] == 0:
                                                         moves.append(((i, j), (i+2*k, j+2*h)))
+
         shuffle(moves)
         return moves
 
@@ -49,22 +50,22 @@ class AI():
                 if not board[i][j] == 0:
                     if str(list(board[i][j].keys())[0]) == "ply" + str(self.ply):
                         n1 += 1
-                        if i < 5:
-                            value += int(1/(i+1))*self.sideVal
+                        if i < 4:
+                            value += int(1 / (i + 1)) * self.sideVal
                         else:
-                            value += int(1/(abs(i-8)))*self.sideVal
-                        value += int((j+1)/8)*self.wallVal
+                            value += int(1 / (abs(i - 8))) * self.sideVal
+                        value += int((j + 1) / 8) * self.wallVal
                         if int(list(board[i][j].values())[0]) == 1:
                             value += self.pieceVal
                         elif int(list(board[i][j].values())[0]) == 2:
                             value += self.kingVal
                     else:
                         n2 += 1
-                        if i < 5:
-                            value -= int(1/(i+1))*self.sideVal
+                        if i < 8:
+                            value -= int(1 / (i + 1)) * self.sideVal
                         else:
-                            value -= int(1/(abs(i-8)))*self.sideVal
-                        value -= int(abs(j-8)/8)*self.wallVal
+                            value -= int(1 / (abs(i - 8))) * self.sideVal
+                        value -= int(abs(j - 8) / 8) * self.wallVal
                         if int(list(board[i][j].values())[0]) == 1:
                             value -= self.pieceVal
                         elif int(list(board[i][j].values())[0]) == 2:
@@ -74,6 +75,8 @@ class AI():
         elif n1 == 0 and n2 > 0:
             value = -10000
         return value
+
+
 
     def update_board(self, board, move):
         selected = move[0]
@@ -88,6 +91,7 @@ class AI():
 
     def minimax(self, board, depth, isMax):
         currVal = self.evaluate_state(board)
+        self.totalnodes +=1
         moves = self.find_moves(board)
         if abs(currVal) == 1000:
             return currVal
@@ -116,3 +120,6 @@ class AI():
                 return bestVal, bestMove
         else:
             return currVal, None
+
+    def explored_node(self):
+        return self.totalnodes
