@@ -1,11 +1,7 @@
-import pygame
-import numpy as np
-import os
-import time
 from random import shuffle
 class AI():
     def __init__(self, diff, ply_num):
-        self.diff = diff
+        self.diff = diff #Diff
         self.ply = ply_num
         self.pieceVal = 10
         self.kingVal = 50
@@ -40,10 +36,33 @@ class AI():
 
         shuffle(moves)
         return moves
-
-    def evaluate_state(self, board):
+    #Basic Evaluation function
+    '''
+    def evaluation_function(self, board):
         value = 0
-        n1 = 0
+        n1 = 0# counter to check win
+        n2 = 0
+        for i in range(8):
+            for j in range(8):
+                if not board[i][j] == 0:
+                    if str(list(board[i][j].keys())[0]) == "ply" + str(self.ply):
+                        n1 += 1
+                        if int(list(board[i][j].values())[0]) == 1:
+                            value += self.pieceVal
+                        elif int(list(board[i][j].values())[0]) == 2:
+                            value += self.kingVal
+                    else:
+                        n2 += 1
+                        if int(list(board[i][j].values())[0]) == 1:
+                            value -= self.pieceVal
+                        elif int(list(board[i][j].values())[0]) == 2:
+                            value -= self.kingVal
+        return value
+    '''
+    #Final Evaluation Function
+    def evaluation_function(self, board):
+        value = 0
+        n1 = 0# counter to check win
         n2 = 0
         for i in range(8):
             for j in range(8):
@@ -77,7 +96,6 @@ class AI():
         return value
 
 
-
     def update_board(self, board, move):
         selected = move[0]
         moveto = move[1]
@@ -90,7 +108,7 @@ class AI():
         return board
 
     def minimax(self, board, depth, isMax):
-        currVal = self.evaluate_state(board)
+        currVal = self.evaluation_function(board)
         self.totalnodes +=1
         moves = self.find_moves(board)
         if abs(currVal) == 1000:

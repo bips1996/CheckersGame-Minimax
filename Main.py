@@ -1,7 +1,6 @@
 import pygame
 import numpy as np
 import os
-from random import shuffle
 from aiclass import AI as AI
 pygame.init()
 import time
@@ -9,7 +8,6 @@ import time
 # GAME CONSTANTS
 screen_size = (960, 600)
 board_size = (600, 600)
-fps=20
 
 #game color constants
 
@@ -342,7 +340,7 @@ def update_score_board(surf,text,size,x,y,):
 
     text_surface=font.render(text,True,BLUE)
     for i in range(-15,15):
-        screen.fill((0,0,0), rect=text_surface.get_rect(topleft=(x+i, y+i)))
+        screen.fill((0,0,0), rect=text_surface.get_rect(topleft=(x+i,y)))
     text_rect= text_surface.get_rect()
     text_rect.midtop=(x,y)
     surf.blit(text_surface,text_rect)
@@ -374,7 +372,7 @@ if __name__ == "__main__":
     player1 = Player(screen, board_size, 1, WHITE)
     player2 = Player(screen, board_size, 2, BLACK)
 
-    ProGamer = AI("hard", 1)
+    AIbot = AI("hard", 1)
 
     gameboard.update_board(player1.pos_pieces, player2.pos_pieces)
 
@@ -397,7 +395,7 @@ if __name__ == "__main__":
         msg_to_screen("AI Score :", WHITE, 680, 140)
         msg_to_screen("Your Score : ", WHITE, 680, 190)
         msg_to_screen("Total nodes Explored  ", WHITE, 697, 260)
-        pygame.draw.rect(screen, WOODEN, (710, 350, 100, 50))
+        pygame.draw.ellipse(screen, WOODEN, (710, 350, 100, 50))
         text_to_button("QUIT", BLACK, 710, 350, 100, 50)
 
 
@@ -423,13 +421,13 @@ if __name__ == "__main__":
                     else :
                         button(cur,710, 350, 100, 50, action="quit")
 
-        # ProGamer's turn
+        # AIbot's turn
         if Player_turn == player1:
             board = copy_board(gameboard.board)
             try:
-                valMove, aiMove = ProGamer.minimax(board, 100, True)
-                nodes=ProGamer.explored_node()
-                update_score_board(screen, str(nodes), 18, 695,290)
+                valMove, aiMove = AIbot.minimax(board, 100, True)
+                nodes=AIbot.explored_node()
+                update_score_board(screen, str(nodes), 18, 780,290)
                 selected = aiMove[0]
                 moveto = aiMove[1]
             except TypeError:
