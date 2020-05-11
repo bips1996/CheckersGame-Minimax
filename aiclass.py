@@ -37,7 +37,6 @@ class AI():
         shuffle(moves)
         return moves
     #Basic Evaluation function
-    '''
     def evaluation_function(self, board):
         value = 0
         n1 = 0# counter to check win
@@ -58,43 +57,9 @@ class AI():
                         elif int(list(board[i][j].values())[0]) == 2:
                             value -= self.kingVal
         return value
-    '''
+    
     #Final Evaluation Function
-    def evaluation_function(self, board):
-        value = 0
-        n1 = 0# counter to check win
-        n2 = 0
-        for i in range(8):
-            for j in range(8):
-                if not board[i][j] == 0:
-                    if str(list(board[i][j].keys())[0]) == "ply" + str(self.ply):
-                        n1 += 1
-                        if i < 4:
-                            value += int(1 / (i + 1)) * self.sideVal
-                        else:
-                            value += int(1 / (abs(i - 8))) * self.sideVal
-                        value += int((j + 1) / 8) * self.wallVal
-                        if int(list(board[i][j].values())[0]) == 1:
-                            value += self.pieceVal
-                        elif int(list(board[i][j].values())[0]) == 2:
-                            value += self.kingVal
-                    else:
-                        n2 += 1
-                        if i < 8:
-                            value -= int(1 / (i + 1)) * self.sideVal
-                        else:
-                            value -= int(1 / (abs(i - 8))) * self.sideVal
-                        value -= int(abs(j - 8) / 8) * self.wallVal
-                        if int(list(board[i][j].values())[0]) == 1:
-                            value -= self.pieceVal
-                        elif int(list(board[i][j].values())[0]) == 2:
-                            value -= self.kingVal
-        if n2 == 0 and n1 > 0:
-            value = 10000
-        elif n1 == 0 and n2 > 0:
-            value = -10000
-        return value
-
+   
 
     def update_board(self, board, move):
         selected = move[0]

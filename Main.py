@@ -13,15 +13,12 @@ board_size = (600, 600)
 
 WOODEN =  (160, 64, 0)
 GREY = (253, 235, 208)
-
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 ORANGE = (255, 156, 0)
 BLUE = (1, 212, 180)
 
 # CLASSES
-
-
 class CheckerBoard():
     def __init__(self, surface, size, col1, col2):
         self.surface = surface
@@ -62,7 +59,7 @@ class CheckerBoard():
                 else:
                     self.board[i][j] = 0
 
-
+#Player class
 class Player():
     def __init__(self, surface, size, num, col):
         self.surface = surface
